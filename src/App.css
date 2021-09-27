@@ -1,38 +1,46 @@
-.App {
-  text-align: center;
+#GameBoard {
+	position: relative;
+	margin: auto;
+	border-style: solid;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#GameBoard .Block {
+	position: absolute;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+#GameBoard .Circle {
+	position: absolute;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+#GameBoard .dot {
+  position: absolute;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
 }
 
-.App-link {
-  color: #61dafb;
+#GameBoard #GameOver {
+	text-align: center;
+	height: 100%;
+	flex-direction: column;
+	display: flex;
+	justify-content: space-around;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#GameBoard #Score {
+	position: relative;
+	top: 105%;
+	text-align: center;
+	font-weight: bold;
+}
+
+#GameBoard #GameOverText {
+	color: #ca0000;
+	font-weight: bold;
+	text-decoration-line: underline;
+}
+
+#GameBoard #PressSpaceText {
+	color: #2e7ecb;
+	font-weight: bold;
 }
