@@ -40,7 +40,11 @@ class Snake extends React.Component {
         apple.push({Xpos: apple2Xpos, Ypos: apple2Ypos});
         apple.push({Xpos: 15*width / 20, Ypos: apple2Ypos});
         apple.push({Xpos: 10*width / 20, Ypos: apple2Ypos});*/
-        apple = this.resetAppleArr(4,snakeTemp[0],height,width,borderWidth);
+        apple = this.resetAppleArr(6,snakeTemp[0],height,width,borderWidth);
+        let speed = borderWidth/5;
+        let easy=4;
+        let med=2;
+        let high=1;
         this.state = {
             boardWidth: width,
             boardHeight: height,
@@ -49,8 +53,11 @@ class Snake extends React.Component {
             blockWidth: blockWidthTemp,
             blockHeight: blockHeightTemp,
             borderWidth: borderWidth,
-            direction: {x: 0, y: -borderWidth},
+            direction: {x: 0, y: -speed},////
             apple: apple,
+            speed: speed,
+            refresh: 10,
+            gameMode: easy,
         }
 
         //this.handlekeyDown = this.handlekeyDown.bind(this);
@@ -83,7 +90,7 @@ class Snake extends React.Component {
         }
         let snakehead = {Xpos: 19*this.state.boardWidth / 20, Ypos: this.state.boardWidth / 2};
         snake.push(snakehead);
-        let newDirection = {x: 0, y: -this.state.borderWidth};
+        let newDirection = {x: 0, y: -this.state.speed};
         this.setState({snake: snake, direction: newDirection})
     }
 
@@ -150,26 +157,49 @@ class Snake extends React.Component {
         return {Xpos: appleXpos, Ypos: appleYpos};
     }
 
-    appleEatenFollowingCommands = (i) =>{
+    appleEatenFollowingCommands = (j) =>{
         let snake = this.state.snake;
         let direction = this.state.direction;
         let blockWidth = this.state.blockWidth;
         let apple = this.state.apple;
+        let i=1;
         if (direction.x!=0){
-            if(direction.x<0){
-                snake.push({Xpos: snake[snake.length-1].Xpos+blockWidth, Ypos: snake[snake.length-1].Ypos});
-            } else{
-                snake.push({Xpos: snake[snake.length-1].Xpos-blockWidth, Ypos: snake[snake.length-1].Ypos});
+            let k = -1 * (direction.x/Math.abs(direction.x));
+            while(i<=this.state.gameMode){
+                snake.push({Xpos: snake[snake.length-1].Xpos+k*blockWidth, Ypos: snake[snake.length-1].Ypos});
+                ++i;
             }
+            /*if(direction.x<0){
+                while(i<=this.state.gameMode){
+                    snake.push({Xpos: snake[snake.length-1].Xpos+blockWidth, Ypos: snake[snake.length-1].Ypos});
+                    ++i;
+                }
+            } else{
+                while(i<=this.state.gameMode){
+                    snake.push({Xpos: snake[snake.length-1].Xpos-blockWidth, Ypos: snake[snake.length-1].Ypos});
+                    i++;
+                }
+            }*/
         } else{ //direction.y!=0
-            if(direction.y<0){
-                snake.push({Xpos: snake[snake.length-1].Xpos, Ypos: snake[snake.length-1].Ypos+blockWidth});
-            } else{
-                snake.push({Xpos: snake[snake.length-1].Xpos, Ypos: snake[snake.length-1].Ypos-blockWidth});
+            let k = -1 * (direction.y/Math.abs(direction.y));
+            while(i<=this.state.gameMode){
+                snake.push({Xpos: snake[snake.length-1].Xpos, Ypos: snake[snake.length-1].Ypos+k*blockWidth});
+                i++;
             }
+            /*if(direction.y<0){
+                while(i<=this.state.gameMode){
+                    snake.push({Xpos: snake[snake.length-1].Xpos, Ypos: snake[snake.length-1].Ypos+blockWidth});
+                    i++;
+                }
+            } else{
+                while(i<=this.state.gameMode){
+                    snake.push({Xpos: snake[snake.length-1].Xpos, Ypos: snake[snake.length-1].Ypos-blockWidth});
+                    i++;
+                }
+            }*/
         }
         let newApple = this.retNewApp();
-        apple[i]=newApple;
+        apple[j]=newApple;
         this.setState({snake: snake, apple: apple})
     }
 
@@ -190,8 +220,8 @@ class Snake extends React.Component {
         let size = snake.length;
         let blockWidth = this.state.blockWidth;
         for (let i=1; i<size;i++ ){
-            if (Math.abs(snake[0].Xpos- snake[i].Xpos)<blockWidth/3 &&
-                Math.abs(snake[0].Ypos- snake[i].Ypos) < blockWidth/3){
+            if (Math.abs(snake[0].Xpos- snake[i].Xpos)<blockWidth/6 &&
+                Math.abs(snake[0].Ypos- snake[i].Ypos) < blockWidth/6){
                     this.resetGame();
                     return;
                 }
@@ -201,12 +231,12 @@ class Snake extends React.Component {
     gameLoop = () =>{
         setInterval(() => {
             this.moveInSpecDirection()
-            this.checkIfAppleEaten()
+            //this.checkIfAppleEaten()
             this.tryEatSnake()
-          }, 200)
-          /*setInterval(() => {
-            
-          }, 1000)*/
+          }, this.state.refresh)
+          setInterval(() => {
+            this.checkIfAppleEaten()
+          }, this.state.refresh/10)
     }
 
     componentDidMount() {
@@ -240,9 +270,9 @@ class Snake extends React.Component {
             snake=this.replaceHeadAndTail();
             flag=1
         }
-        let blockWidth = this.state.blockWidth;
+        //let blockWidth = this.state.blockWidth;
         direction.x = 0;
-        direction.y = -blockWidth;
+        direction.y = -this.state.speed;
         if(flag==1){
             this.setState({snake:snake, direction: direction});
         } else{
@@ -261,9 +291,9 @@ class Snake extends React.Component {
             snake=this.replaceHeadAndTail();
             flag=1
         }
-        let blockWidth = this.state.blockWidth;
+        //let blockWidth = this.state.blockWidth;
         direction.x = 0;
-        direction.y = blockWidth;
+        direction.y = this.state.speed;
         if(flag==1){
             this.setState({snake:snake, direction: direction});
         } else{
@@ -281,8 +311,8 @@ class Snake extends React.Component {
             snake=this.replaceHeadAndTail();
             flag=1
         }
-        let blockWidth = this.state.blockWidth;
-        direction.x = -blockWidth;
+        //let blockWidth = this.state.blockWidth;
+        direction.x = -this.state.speed;
         direction.y = 0;
         if(flag==1){
             this.setState({snake:snake, direction: direction});
@@ -301,8 +331,8 @@ class Snake extends React.Component {
             snake=this.replaceHeadAndTail();
             flag=1
         }
-        let blockWidth = this.state.blockWidth;
-        direction.x = blockWidth;
+        //let blockWidth = this.state.blockWidth;
+        direction.x = this.state.speed;
         direction.y = 0;
         if(flag==1){
             this.setState({snake:snake, direction: direction});
@@ -346,7 +376,7 @@ class Snake extends React.Component {
                 height: this.state.blockHeight,
                 left: snakePart.Xpos,
                 top: snakePart.Ypos,
-                background: 'orange',
+                background: '#ff9999',
               }}
             />
           )
@@ -360,7 +390,7 @@ class Snake extends React.Component {
                         height:this.state.blockWidth,
                         left: appleI.Xpos,
                         top: appleI.Ypos,
-                        background: 'Turquoise'}}>
+                        background: '#66ffff'}}>
                 
             </div>
             )

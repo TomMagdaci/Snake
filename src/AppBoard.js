@@ -45,7 +45,7 @@ class Board extends React.Component {
                 width: props.width,
                 height: props.height,}
     }
-
+//#996600
     render() {
         return(
         <div
@@ -54,7 +54,8 @@ class Board extends React.Component {
           width: this.state.width,
           height: this.state.height,
           borderWidth: this.state.borderWidth,
-          borderColor: "gray",
+          borderColor: "#0d0d0d",
+          background: "#0d0d0d",
         }}>
             
          <Snake width={this.state.width} height={this.state.height} borderWidth ={this.state.borderWidth} />
